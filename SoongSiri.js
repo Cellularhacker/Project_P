@@ -15,7 +15,7 @@ var TwitterBot = require("node-twitterbot").TwitterBot;
 
 
 //Initilize
-var Bot = new TwitterBot("config.json");
+var Bot = new TwitterBot("./config.json");
 
 //Functions
 function getDateTime() {  //This function is made for time stamp.
