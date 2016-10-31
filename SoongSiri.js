@@ -5,7 +5,7 @@
 // Code by Cellularhacker
 // Supervised by Spica
 // Operated by Yes_Gimchi
-// Version: Beta.1.1
+// Version: Beta.1.1.1
 var sleep = require('sleep');
 var date = new Date();
 var loop = require('node-while-loop');
@@ -70,7 +70,8 @@ var currentHour = date.getHours();
         console.log(err, written, buffer);
         fs.close(fd);
       });
-      Bot.Tweet(TweetContent);
+      Bot.Tweet(TweetContent);  // Tweet!
+      console.log(buf); // Print to console.
 
       // Sleep Process for Next Tweet.
       console.log("");
