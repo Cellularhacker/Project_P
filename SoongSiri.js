@@ -47,28 +47,8 @@ function getHourTime() {
 }
 
 // Real Codes
-var Bot = new TwitterBot({
-  "consumer_secret": "",
-    "consumer_key": "",
-	"access_token": "",
-    "access_token_secret": ""
-  });
-
-var List = [  "" ,
-              "" ,
-              "" , 
-              "" ,
-              "" ,
-              "" ,
-              "" ,
-              "" , 
-              "" , 
-              "" , 
-              "" , 
-              "" , 
-              "" , 
-              "" ];
-
+var Bot = new TwitterBot("config.json");
+var MentList = new Array("mentlist.json");
 
 var i = 0;
 console.log("Running SoongSiri...");
@@ -79,7 +59,7 @@ loop.while(function Main () {
   sleep.sleep(617);
   var currentHour = date.getHours();
   if(currentHour >= 9 && currentHour <= 21) {
-    var TweetContent = List.pop;
+    var TweetContent = MentList.pop;
     Bot.tweet(TweetContent);
     console.log("[Tweet][%s] %s", getDateTime(), TweetContent);
     console.log();
