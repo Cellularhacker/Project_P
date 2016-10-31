@@ -1,18 +1,24 @@
 // SoongSiri.js
 // Based on Node.js
 // FirstDate: 2016-10-26
-// Latest Modified: 2016-10-29 02:13
+// Latest Modified: 2016-10-31 17:
 // Code by Cellularhacker
 // Supervised by Spica
 // Operated by Yes_Gimchi
-// Version: Beta.1.0
+// Version: Beta.1.1
 var sleep = require('sleep');
 var date = new Date();
 var loop = require('node-while-loop');
-var Array = require('node-array');
+var arr = require('./mentlist.js').arr;
+var fs = require('fs');
+var TwitterBot = require("node-twitterbot").TwitterBot;
+
+
+//Initilize
+var Bot = new TwitterBot("config.json");
 
 //Functions
-function getDateTime() {
+function getDateTime() {  //This function is made for time stamp.
 
     var date = new Date();
 
@@ -34,10 +40,9 @@ function getDateTime() {
     day = (day < 10 ? "0" : "") + day;
 
     return year + "-" + month + "-" + day + "_" + hour + ":" + min + ":" + sec;
-
 }
 
-function getHourTime() {
+function getHourTime() {  // This function is made for Daytime;available to tweet.
     var date = new Date();
 
     var hour = date.getHours();
@@ -47,23 +52,41 @@ function getHourTime() {
 }
 
 // Real Codes
-var Bot = new TwitterBot("config.json");
-var MentList = new Array("mentlist.json");
-
-var i = 0;
 console.log("Running SoongSiri...");
-loop.while(function Main () {
-  if(i >= 12) {
-    process.exit();
-  }
-  sleep.sleep(617);
-  var currentHour = date.getHours();
-  if(currentHour >= 9 && currentHour <= 21) {
-    var TweetContent = MentList.pop;
-    Bot.tweet(TweetContent);
-    console.log("[Tweet][%s] %s", getDateTime(), TweetContent);
-    console.log();
-    i++;
-    sleep.sleep(35983); 
+var currentHour = date.getHours();
+    
+  fs.open('./log.txt', 'a+', function(err, fd) {
+
+  for(var for_i = 0; for_i<arr.length; for_i++){
+    var TweetContent = arr[for_i];
+    var CurrentTime = getDateTime();
+
+    if(currentHour >= 9 && currentHour <= 21) {
+      // Record File and Tweet the Content.
+      if(err) throw err;
+      var buf = '[Tweet][' + CurrentTime + '] ' + TweetContent + '\n';
+      fs.write(fd, buf, 0, buf.length, null, function(err, written, buffer) {
+        if(err) throw err;
+        console.log(err, written, buffer);
+        fs.close(fd);
+      });
+      Bot.Tweet(TweetContent);
+
+      // Sleep Process for Next Tweet.
+      console.log("");
+      sleep.sleep(35983);
+    } else {  // Wait for specific time...
+      var sleepTime = 617;
+      sleep.sleep(sleepTime);
+      var buf = '[Sleep][' + CurrentTime + '] Waits for' + sleepTime + "seconds..";
+
+      console.log(buf); //logging to file.
+
+      fs.write(fd, buf, 0, buf.length, null, function(err, written, buffer) {
+        if(err) throw err;
+        console.log(err, written, buffer);
+        fs.close(fd);
+      });
+    }
   }
 });
